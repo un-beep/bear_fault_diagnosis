@@ -1,5 +1,6 @@
 import requests
 import os
+import time
 
 # 文件下载的URLs
 # 本论文只使用normal_3作为健康数据
@@ -125,24 +126,34 @@ paths = {
 }
     
 
-def download_file(url, save_path):
-    """下载文件并保存到指定路径"""
-    try:
-        response = requests.get(url, timeout=10)  # 设置超时时间
-        response.raise_for_status()  # 如果请求失败，会抛出异常
-        with open(save_path, 'wb') as f:
-            f.write(response.content)
-        print(f"文件 {os.path.basename(save_path)} 下载成功！")
-    except requests.exceptions.RequestException as e:
-        print(f"下载 {os.path.basename(save_path)} 时发生错误: {e}")
+def download_file(url, save_path, retries=3):
+    """下载文件并保存到指定路径，支持超时重试"""
+    if os.path.exists(save_path):
+        print(f"文件 {os.path.basename(save_path)} 已存在，跳过下载。")
+        return
 
+    for attempt in range(1, retries + 1):
+        try:
+            response = requests.get(url, timeout=10)  # 设置超时时间
+            response.raise_for_status()  # 如果请求失败，会抛出异常
+            with open(save_path, 'wb') as f:
+                f.write(response.content)
+            print(f"文件 {os.path.basename(save_path)} 下载成功！")
+            return
+        except requests.exceptions.RequestException as e:
+            print(f"下载 {os.path.basename(save_path)} 时发生错误: {e}")
+            if attempt < retries:
+                print(f"重试中 ({attempt}/{retries})...")
+                time.sleep(2)  # 等待2秒后重试
+            else:
+                print(f"文件 {os.path.basename(save_path)} 下载失败，已尝试 {retries} 次。")
 
 def download_data(urls, save_dir):
     """根据指定的URLs下载数据并保存"""
     os.makedirs(save_dir, exist_ok=True)  # 确保目录存在
     for file_name, url in urls.items():
         save_path = os.path.join(save_dir, f"{file_name}.mat")
-        download_file(url, save_path)
+        download_file(url, save_path, 3)
 
 
 # 下载健康数据
