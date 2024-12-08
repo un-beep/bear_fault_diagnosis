@@ -119,48 +119,37 @@ Bearing_Fault_Data_URLs={
 # 存储路径
 paths = { 
             "Normal_Baseline_Data": './data/Normal_Baseline_Data',
-            "0.007inch": './data/48k_Drive_End_Bearing_Fault_Data/0.007inch',
-            "0.014inch": './data/48k_Drive_End_Bearing_Fault_Data/0.014inch',
-            "0.021inch": './data/48k_Drive_End_Bearing_Fault_Data/0.021inch',
+            "007inch": './data/48k_Drive_End_Bearing_Fault_Data/0.007inch',
+            "014inch": './data/48k_Drive_End_Bearing_Fault_Data/0.014inch',
+            "021inch": './data/48k_Drive_End_Bearing_Fault_Data/0.021inch',
 }
     
 
-# 下载并保存文件
-for type_name, path in paths.items():
-    # 确保文件夹存在，不存在则创建文件夹
-    os.makedirs(path, exist_ok=True)
+def download_file(url, save_path):
+    """下载文件并保存到指定路径"""
+    try:
+        response = requests.get(url, timeout=10)  # 设置超时时间
+        response.raise_for_status()  # 如果请求失败，会抛出异常
+        with open(save_path, 'wb') as f:
+            f.write(response.content)
+        print(f"文件 {os.path.basename(save_path)} 下载成功！")
+    except requests.exceptions.RequestException as e:
+        print(f"下载 {os.path.basename(save_path)} 时发生错误: {e}")
 
-    if path == './data/Normal_Baseline_Data':
-        for Normal_Baseline_Data_Name, url in Normal_Baseline_Data_URLs.items():
-            try:
-                response = requests.get(url)
-                response.raise_for_status()  # 如果请求失败，会抛出异常
-                path_name = os.path.join(path, f"{Normal_Baseline_Data_Name}.mat")
 
-                # 以二进制模式写入文件
-                with open(path_name, 'wb') as f:
-                    f.write(response.content)
-                print(f"文件 {Normal_Baseline_Data_Name}.mat 下载成功！")
+def download_data(urls, save_dir):
+    """根据指定的URLs下载数据并保存"""
+    os.makedirs(save_dir, exist_ok=True)  # 确保目录存在
+    for file_name, url in urls.items():
+        save_path = os.path.join(save_dir, f"{file_name}.mat")
+        download_file(url, save_path)
 
-            except requests.exceptions.RequestException as e:
-                print(f"下载 {Normal_Baseline_Data_Name} 时发生错误: {e}")
 
-    for size_type, total_urls in Bearing_Fault_Data_URLs.items():
-        for fault_type, urls in total_urls.items():
-            # 根据故障位置分类保存到对应的文件夹内
-            path = path + f"/{size_type}/{fault_type}/" 
-            # 确保文件夹存在，不存在则创建文件夹
-            os.makedirs(path, exist_ok=True)
-            try:              
-                for data_name, url in urls.items():
-                    response = requests.get(url)
-                    response.raise_for_status()  # 如果请求失败，会抛出异常
-                    path_name = os.path.join(path, f"{data_name}.mat")
+# 下载健康数据
+download_data(Normal_Baseline_Data_URLs, paths["Normal_Baseline_Data"])
 
-                    # 以二进制模式写入文件
-                    with open(path_name, 'wb') as f:
-                        f.write(response.content)
-                    print(f"文件 {data_name}.mat 下载成功！")
-
-            except requests.exceptions.RequestException as e:
-                print(f"下载 {data_name} 时发生错误: {e}")
+# 下载故障数据
+for fault_size, fault_types in Bearing_Fault_Data_URLs.items():
+    for fault_type, urls in fault_types.items():
+        fault_dir = os.path.join(paths[fault_size], fault_type)
+        download_data(urls, fault_dir)
