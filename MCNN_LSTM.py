@@ -128,6 +128,7 @@ def plot_confusion_matrix(cm, classes, title='Confusion matrix', cmap=plt.cm.Blu
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predict label')
+    plt.show()
 
 begain_time = time.time()
 
@@ -139,6 +140,7 @@ model.summary()
 history = model.fit(x=X_train, y=y_train, batch_size=100, epochs=400, 
                     verbose=2, validation_data=(X_test, y_test),
                     shuffle=True, initial_epoch=0)
+
 
 # Predict
 y_pre = model.predict(X_test)

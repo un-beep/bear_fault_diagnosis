@@ -179,4 +179,5 @@ for fault_size, fault_types in Bearing_Fault_Data_URLs.items():
         fault_dir = os.path.join(paths[fault_size], fault_type)
         download_data(urls, fault_dir)
 
+# 本项目数据集
 download_data(My_test_URLs, paths["My_test"])
