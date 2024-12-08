@@ -115,6 +115,19 @@ Bearing_Fault_Data_URLs={
 
 }
 
+# 本文用到的测试的10个数据
+My_test_URLs ={
+    "normal_3": 'https://engineering.case.edu/sites/default/files/100.mat',
+    "IR007_3": 'https://engineering.case.edu/sites/default/files/112.mat',
+    "B007_3": 'https://engineering.case.edu/sites/default/files/125.mat',
+    "OR007_6_3": 'https://engineering.case.edu/sites/default/files/138.mat',
+    "IR014_3": 'https://engineering.case.edu/sites/default/files/177.mat',
+    "B014_3": 'https://engineering.case.edu/sites/default/files/192.mat',
+    "OR014_6_3": 'https://engineering.case.edu/sites/default/files/204.mat',
+    "IR021_3": 'https://engineering.case.edu/sites/default/files/217.mat',
+    "B021_3": 'https://engineering.case.edu/sites/default/files/229.mat',
+    "OR021_6_3": 'https://engineering.case.edu/sites/default/files/241.mat',
+}
 
 # 存储路径
 paths = { 
@@ -122,8 +135,10 @@ paths = {
             "007inch": './data/48k_Drive_End_Bearing_Fault_Data/0.007inch',
             "014inch": './data/48k_Drive_End_Bearing_Fault_Data/0.014inch',
             "021inch": './data/48k_Drive_End_Bearing_Fault_Data/0.021inch',
+            "My_test": './data/My_test',
 }
-    
+
+
 
 def download_file(url, save_path, retries=3):
     """下载文件并保存到指定路径，支持超时重试"""
@@ -163,3 +178,5 @@ for fault_size, fault_types in Bearing_Fault_Data_URLs.items():
     for fault_type, urls in fault_types.items():
         fault_dir = os.path.join(paths[fault_size], fault_type)
         download_data(urls, fault_dir)
+
+download_data(My_test_URLs, paths["My_test"])
