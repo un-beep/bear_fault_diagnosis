@@ -35,7 +35,7 @@ class Data(object):
         for i in range(len(file_list)):
             file = scio.loadmat('data/My_test/{}'.format(file_list[i]))
             for k in file.keys():
-                file_matched = re.match('X\d{3}_DE_time', k)
+                file_matched = re.match(r'X\d{3}_DE_time', k)
                 if file_matched:
                     key = file_matched.group()
             if i == 0:
@@ -132,7 +132,7 @@ def plot_confusion_matrix(cm, classes, title='Confusion matrix', cmap=plt.cm.Blu
 begain_time = time.time()
 
 model = built_model()
-opt = Adam(lr=0.0006)
+opt = Adam(learning_rate=0.0006)
 model.compile(optimizer=opt, loss='mean_squared_error', metrics=['accuracy'])
 model.summary()
 
