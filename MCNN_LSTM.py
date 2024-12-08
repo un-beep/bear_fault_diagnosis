@@ -28,12 +28,12 @@ class Data(object):
         self.label = self.get_label()
         
     def file_list(self):
-        return os.listdir('data/')
+        return os.listdir('data/My_test')
     
     def get_data(self):
         file_list = self.file_list()
         for i in range(len(file_list)):
-            file = scio.loadmat('data/{}'.format(file_list[i]))
+            file = scio.loadmat('data/My_test/{}'.format(file_list[i]))
             for k in file.keys():
                 file_matched = re.match('X\d{3}_DE_time', k)
                 if file_matched:
