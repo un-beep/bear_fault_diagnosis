@@ -11,3 +11,7 @@ If you find this paper helpful, Welcome to cite it!
 
 ## See also
 Deep Transfer Learning for Bearing Fault Diagnosis: A Systematic Review Since 2016. [[paper]](https://ieeexplore.ieee.org/abstract/document/10042467) [[code]](https://github.com/Xiaohan-Chen/fault-diagnosis-transfer-learning-pytorch)
+
+## test
+先运行get_data.py爬取CWRU数据集，再运行MCNN_LSTM.py可开始训练并最后得到一个测试集的9*9的混淆矩阵
+![](framework.jpg)
