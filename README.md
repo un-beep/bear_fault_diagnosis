@@ -18,7 +18,7 @@ Deep Transfer Learning for Bearing Fault Diagnosis: A Systematic Review Since 20
 
 ### 先安装依赖库
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
 ### 测试
 
