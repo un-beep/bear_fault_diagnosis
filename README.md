@@ -22,5 +22,5 @@ Deep Transfer Learning for Bearing Fault Diagnosis: A Systematic Review Since 20
 
 ### 测试
 
-先运行get_data.py爬取CWRU数据集，再运行MCNN_LSTM.py可开始训练并最后得到一个测试集的9*9的混淆矩阵
+先运行get_data.py爬取CWRU数据集，再运行MCNN_LSTM.py可开始训练并最后得到一个测试集的10*10的混淆矩阵
 ![](Figure_1.png)
