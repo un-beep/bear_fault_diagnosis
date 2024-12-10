@@ -1,3 +1,10 @@
+import os
+# keras后端可选tensorflow/torch/jax
+os.environ["KERAS_BACKEND"] = "torch"
+# os.environ["TF_USE_LEGACY_KERAS"] = "1"
+
+import torch
+
 import time
 import os
 import re
@@ -130,17 +137,35 @@ def plot_confusion_matrix(cm, classes, title='Confusion matrix', cmap=plt.cm.Blu
     plt.xlabel('Predict label')
     plt.show()
 
-begain_time = time.time()
-
 model = built_model()
+# model = model.to("cuda:0") 
 opt = Adam(learning_rate=0.0006)
 model.compile(optimizer=opt, loss='mean_squared_error', metrics=['accuracy'])
 model.summary()
+
+
+begain_time = time.time()
+
+# X_train = (torch.from_numpy(X_train))
+# y_train = (torch.from_numpy(y_train))
+# X_test = (torch.from_numpy(X_test))
+# y_test = (torch.from_numpy(y_test))
+# 
+# X_train = X_train.cuda()
+# y_train = y_train.cuda()
+# X_test = X_test.cuda()
+# y_test = y_test.cuda()
 
 history = model.fit(x=X_train, y=y_train, batch_size=100, epochs=400, 
                     verbose=2, validation_data=(X_test, y_test),
                     shuffle=True, initial_epoch=0)
 
+end_time = time.time()
+total_time = end_time-begain_time
+print(f'total_time = {total_time}s')
+
+# X_test = (X_test.cpu())
+# y_test = (y_test.cpu())
 
 # Predict
 y_pre = model.predict(X_test)
